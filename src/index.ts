@@ -48,4 +48,4 @@ export function createApexFramework(config: ApexConfig): ApexFramework {
 }
 
 // Default export
-export default ApexFramework; 
+export default ApexFramework;

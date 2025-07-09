@@ -6,12 +6,13 @@ module.exports = {
     sourceType: 'module',
     project: './tsconfig.json',
   },
+  ignorePatterns: ['.eslintrc.js', 'jest.config.js', '*.test.ts'],
   plugins: [
     '@typescript-eslint',
   ],
   extends: [
     'airbnb-base',
-    '@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended',
   ],
   rules: {
     'import/extensions': [
@@ -34,7 +35,9 @@ module.exports = {
   },
   settings: {
     'import/resolver': {
-      typescript: {},
+      node: {
+        extensions: ['.js', '.ts'],
+      },
     },
   },
 }; 
