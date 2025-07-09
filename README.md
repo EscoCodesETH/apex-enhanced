@@ -1,5 +1,3 @@
-# 🚀 APEX Enhanced
-
 <div align="center">
   <h1>🚀 APEX Enhanced</h1>
   <p><strong>AI-Powered EXcellence in Development</strong></p>
