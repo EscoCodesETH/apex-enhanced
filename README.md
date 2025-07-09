@@ -1,190 +1,246 @@
-# 🚀 AI Dev Tasks 🤖
+# 🚀 APEX Enhanced
 
-Welcome to **AI Dev Tasks**! This repository provides a collection of markdown files designed to supercharge your feature development workflow with AI-powered IDEs and CLIs. Originally built for [Cursor](https://cursor.sh/), these tools work with any AI coding assistant including Claude Code, Windsurf, and others. By leveraging these structured prompts, you can systematically approach building features, from ideation to implementation, with built-in checkpoints for verification.
-
-Stop wrestling with monolithic AI requests and start guiding your AI collaborator step-by-step!
-
-## ✨ The Core Idea
-
-Building complex features with AI can sometimes feel like a black box. This workflow aims to bring structure, clarity, and control to the process by:
-
-1. **Defining Scope:** Clearly outlining what needs to be built with a Product Requirement Document (PRD).
-2. **Detailed Planning:** Breaking down the PRD into a granular, actionable task list.
-3. **Iterative Implementation:** Guiding the AI to tackle one task at a time, allowing you to review and approve each change.
-
-This structured approach helps ensure the AI stays on track, makes it easier to debug issues, and gives you confidence in the generated code.
-
-## Workflow: From Idea to Implemented Feature 💡➡️💻
-
-Here's the step-by-step process using the `.md` files in this repository:
-
-### 1️⃣ Create a Product Requirement Document (PRD)
-
-First, lay out the blueprint for your feature. A PRD clarifies what you're building, for whom, and why.
-
-You can create a lightweight PRD directly within your AI tool of choice:
-
-1. Ensure you have the `create-prd.md` file from this repository accessible.
-2. In your AI tool, initiate PRD creation:
-
-    ```text
-    Use @create-prd.md
-    Here's the feature I want to build: [Describe your feature in detail]
-    Reference these files to help you: [Optional: @file1.py @file2.ts]
-    ```
-    *(Pro Tip: For Cursor users, MAX mode is recommended for complex PRDs if your budget allows for more comprehensive generation.)*
-
-    ![Example of initiating PRD creation](https://pbs.twimg.com/media/Go6DDlyX0AAS7JE?format=jpg&name=large)
-
-### 2️⃣ Generate Your Task List from the PRD
-
-With your PRD drafted (e.g., `MyFeature-PRD.md`), the next step is to generate a detailed, step-by-step implementation plan for your AI Developer.
-
-1. Ensure you have `generate-tasks.md` accessible.
-2. In your AI tool, use the PRD to create tasks:
-
-    ```text
-    Now take @MyFeature-PRD.md and create tasks using @generate-tasks.md
-    ```
-    *(Note: Replace `@MyFeature-PRD.md` with the actual filename of the PRD you generated in step 1.)*
-
-    ![Example of generating tasks from PRD](https://pbs.twimg.com/media/Go6FITbWkAA-RCT?format=jpg&name=medium)
-
-### 3️⃣ Examine Your Task List
-
-You'll now have a well-structured task list, often with tasks and sub-tasks, ready for the AI to start working on. This provides a clear roadmap for implementation.
-
-![Example of a generated task list](https://pbs.twimg.com/media/Go6GNuOWsAEcSDm?format=jpg&name=medium)
-
-### 4️⃣ Instruct the AI to Work Through Tasks (and Mark Completion)
-
-To ensure methodical progress and allow for verification, we'll use `process-task-list.md`. This command instructs the AI to focus on one task at a time and wait for your go-ahead before moving to the next.
-
-1. Create or ensure you have the `process-task-list.md` file accessible.
-2. In your AI tool, tell the AI to start with the first task (e.g., `1.1`):
-
-    ```text
-    Please start on task 1.1 and use @process-task-list.md
-    ```
-    *(Important: You only need to reference `@process-task-list.md` for the *first* task. The instructions within it guide the AI for subsequent tasks.)*
-
-    The AI will attempt the task and then prompt you to review.
-
-    ![Example of starting on a task with process-task-list.md](https://pbs.twimg.com/media/Go6I41KWcAAAlHc?format=jpg&name=medium)
-
-### 5️⃣ Review, Approve, and Progress ✅
-
-As the AI completes each task, you review the changes.
-
-* If the changes are good, simply reply with "yes" (or a similar affirmative) to instruct the AI to mark the task complete and move to the next one.
-* If changes are needed, provide feedback to the AI to correct the current task before moving on.
-
-You'll see a satisfying list of completed items grow, providing a clear visual of your feature coming to life!
-
-![Example of a progressing task list with completed items](https://pbs.twimg.com/media/Go6KrXZWkAA_UuX?format=jpg&name=medium)
-
-While it's not always perfect, this method has proven to be a very reliable way to build out larger features with AI assistance.
-
-### Video Demonstration 🎥
-
-If you'd like to see this in action, I demonstrated it on [Claire Vo's "How I AI" podcast](https://www.youtube.com/watch?v=fD4ktSkNCw4).
-
-![Demonstration of AI Dev Tasks on How I AI Podcast](https://img.youtube.com/vi/fD4ktSkNCw4/maxresdefault.jpg)
-
-## 🗂️ Files in this Repository
-
-* **`create-prd.md`**: Guides the AI in generating a Product Requirement Document for your feature.
-* **`generate-tasks.md`**: Takes a PRD markdown file as input and helps the AI break it down into a detailed, step-by-step implementation task list.
-* **`process-task-list.md`**: Instructs the AI on how to process the generated task list, tackling one task at a time and waiting for your approval before proceeding. (This file also contains logic for the AI to mark tasks as complete).
-
-## 🌟 Benefits
-
-* **Structured Development:** Enforces a clear process from idea to code.
-* **Step-by-Step Verification:** Allows you to review and approve AI-generated code at each small step, ensuring quality and control.
-* **Manages Complexity:** Breaks down large features into smaller, digestible tasks for the AI, reducing the chance of it getting lost or generating overly complex, incorrect code.
-* **Improved Reliability:** Offers a more dependable approach to leveraging AI for significant development work compared to single, large prompts.
-* **Clear Progress Tracking:** Provides a visual representation of completed tasks, making it easy to see how much has been done and what's next.
-
-## 🛠️ How to Use
-
-1. **Clone or Download:** Get these `.md` files into your project or a central location where your AI tool can access them.
-2. **Follow the Workflow:** Systematically use the `.md` files in your AI assistant as described in the workflow above.
-3. **Adapt and Iterate:**
-    * Feel free to modify the prompts within the `.md` files to better suit your specific needs or coding style.
-    * If the AI struggles with a task, try rephrasing your initial feature description or breaking down tasks even further.
-
-## Tool-Specific Instructions
-
-### Cursor
-
-Cursor users can follow the workflow described above, using the `.md` files directly in the Agent chat:
-
-1. Ensure you have the files from this repository accessible
-2. In Cursor's Agent chat, reference files with `@` (e.g., `@create-prd.md`)
-3. Follow the 5-step workflow as outlined above
-4. **MAX Mode for PRDs:** Using MAX mode in Cursor for PRD creation can yield more thorough results if your budget supports it
-
-### Claude Code
-
-To use these tools with Claude Code:
-
-1. **Copy files to your repo**: Copy the three `.md` files to a subdirectory in your project (e.g., `/ai-dev-tasks`)
-
-2. **Reference in CLAUDE.md**: Add these lines to your project's `./CLAUDE.md` file:
-   ```
-   # AI Dev Tasks
-   Use these files when I request structured feature development using PRDs:
-   /ai-dev-tasks/create-prd.md
-   /ai-dev-tasks/generate-tasks.md
-   /ai-dev-tasks/process-task-list.md
-   ```
-
-3. **Create custom commands** (optional): For easier access, create these files in `.claude/commands/`:
-   - `.claude/commands/create-prd.md` with content:
-     ```
-     Please use the structured workflow in /ai-dev-tasks/create-prd.md to help me create a PRD for a new feature.
-     ```
-   - `.claude/commands/generate-tasks.md` with content:
-     ```
-     Please generate tasks from the PRD using /ai-dev-tasks/generate-tasks.md
-     If not explicitly told which PRD to use, generate a list of PRDs and ask the user to select one under `/tasks` or create a new one using `create-prd.md`:
-     - assume it's stored under `/tasks` and has a filename starting with `prd-` (e.g., `prd-[name].md`)
-     - it should not already have a corresponding task list in `/tasks` (e.g., `tasks-prd-[name].md`)
-     - **always** ask the user to confirm the PRD file name before proceeding
-     Make sure to provide options in number lists so I can respond easily (if multiple options).
-     ```
-   - `.claude/commands/process-task-list.md` with content:
-     ```
-     Please process the task list using /ai-dev-tasks/process-task-list.md
-     ```
-
-   Make sure to restart Claude Code after adding these files (`/exit`).
-   Then use commands like `/create-prd` to quickly start the workflow.
-   Note: This setup can also be adopted for a global level across all your projects, please refer to the Claude Code documentation [here](https://docs.anthropic.com/en/docs/claude-code/memory) and [here](https://docs.anthropic.com/en/docs/claude-code/common-workflows#create-personal-slash-commands).
-
-### Other Tools
-
-For other AI-powered IDEs or CLIs:
-
-1. Copy the `.md` files to your project
-2. Reference them according to your tool's documentation
-3. Follow the same workflow principles
-
-## 💡 Tips for Success
-
-* **Be Specific:** The more context and clear instructions you provide (both in your initial feature description and any clarifications), the better the AI's output will be.
-* **Correct File Tagging:** Always ensure you're accurately referencing the PRD filename when generating tasks.
-* **Patience and Iteration:** AI is a powerful tool, but it's not magic. Be prepared to guide, correct, and iterate. This workflow is designed to make that iteration process smoother.
-
-## 🤝 Contributing
-
-Got ideas to improve these `.md` files or have new ones that fit this workflow? Contributions are welcome!
-
-Please feel free to:
-
-* Open an issue to discuss changes or suggest new features.
-* Submit a pull request with your enhancements.
+<div align="center">
+  <h1>🚀 APEX Enhanced</h1>
+  <p><strong>AI-Powered EXcellence in Development</strong></p>
+  <p>The intelligent workflow that combines AI assistance with proven software engineering practices</p>
+  
+  <a href="https://github.com/EscoCodesETH/apex-enhanced/blob/main/LICENSE">
+    <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-blue.svg">
+  </a>
+  <a href="https://github.com/EscoCodesETH/apex-enhanced/stargazers">
+    <img alt="GitHub stars" src="https://img.shields.io/github/stars/EscoCodesETH/apex-enhanced">
+  </a>
+  <a href="https://github.com/EscoCodesETH/apex-enhanced/network/members">
+    <img alt="GitHub forks" src="https://img.shields.io/github/forks/EscoCodesETH/apex-enhanced">
+  </a>
+</div>
 
 ---
 
-Happy AI-assisted developing!
+## 🎯 What is APEX Enhanced?
+
+APEX Enhanced is an intelligent development workflow that treats AI as a capable partner while maintaining the quality and safety necessary for production software. It adapts to your needs - from quick prototypes to enterprise-grade systems.
+
+### Evolution from AI Dev Tasks
+
+APEX Enhanced evolved from the original AI Dev Tasks workflow, expanding the simple 3-file system into a comprehensive framework that includes:
+- Adaptive complexity modes
+- Built-in quality gates and TDD practices
+- Smart git integration
+- Multi-tool support beyond just Cursor
+
+### ✨ Key Features
+
+- **🧠 Adaptive Complexity** - Simple process for simple features, robust process for critical systems
+- **✅ Automatic Quality Gates** - AI-enforced best practices without manual discipline
+- **🧪 TDD by Default** - Tests drive design, not the other way around
+- **👀 Sandi Metz-Style Reviews** - Empathetic, educational code reviews
+- **🔄 Smart Git Integration** - Intelligent commits, PRs, and conflict resolution
+- **📈 Continuous Learning** - AI improves based on your patterns and preferences
+
+## 🚀 Quick Start (5 Minutes)
+
+```bash
+# 1. Clone the templates
+git clone https://github.com/EscoCodesETH/apex-enhanced.git
+cd apex-enhanced
+
+# 2. Run setup for your AI tool
+./scripts/setup.sh          # For Claude/Cursor
+./scripts/setup.ps1         # For Windows
+
+# 3. Start your first feature
+# Tell your AI: "Let's use APEX Enhanced to implement user authentication"
+```
+
+[**📖 Full Quick Start Guide →**](QUICK_START.md)
+
+## 📁 Repository Structure
+
+```
+apex-enhanced/
+├── README.md                    # This file
+├── QUICK_START.md              # 5-minute getting started guide
+├── LICENSE                     # MIT License
+├── .github/                    # GitHub specific files
+│   ├── ISSUE_TEMPLATE/
+│   └── workflows/
+├── docs/                       # Comprehensive documentation
+│   ├── getting-started/
+│   ├── workflows/
+│   ├── guides/
+│   └── comparison/
+├── templates/                  # AI tool integrations
+│   ├── .claude/
+│   ├── .github/copilot/
+│   ├── cursor/
+│   └── vscode/
+├── examples/                   # Real-world implementations
+│   ├── simple-todo-app/
+│   ├── auth-system/
+│   ├── payment-integration/
+│   └── real-world-saas/
+├── scripts/                    # Setup and utilities
+│   ├── setup.sh
+│   ├── setup.ps1
+│   └── apex-cli/
+└── community/                  # Community resources
+    ├── CONTRIBUTING.md
+    ├── CODE_OF_CONDUCT.md
+    └── ADOPTERS.md
+```
+
+## 📊 APEX vs Traditional Development
+
+| Aspect | Traditional | APEX Enhanced |
+|--------|------------|---------------|
+| Planning | Fixed process | Adaptive to complexity |
+| Testing | Often after coding | Always before (TDD) |
+| Code Review | Manual, inconsistent | AI-powered, consistent |
+| Documentation | Gets outdated | Self-maintaining |
+| Learning | Individual | AI learns patterns |
+
+## 🎭 Choose Your Mode
+
+APEX adapts to your needs:
+
+### 🏃 Lightweight Mode
+For simple features and prototypes
+- 15-minute planning
+- Basic quality checks
+- Quick iteration
+
+### ⚖️ Standard Mode
+For most production features
+- Balanced planning
+- Comprehensive testing
+- Automatic quality gates
+
+### 🛡️ Robust Mode
+For critical systems and payments
+- Detailed planning
+- Security analysis
+- Complete documentation
+
+## 🤖 Supported AI Tools
+
+- **Claude Projects** - Native support with `.claude/apex.md`
+- **Cursor** - Full integration via `.cursorrules`
+- **GitHub Copilot** - Compatible with `.github/copilot/instructions.md`
+- **Continue.dev** - Community support
+- **Windsurf** - Experimental
+- **VS Code** - Settings and configuration included
+
+## 📚 Documentation
+
+### Getting Started
+- [Installation Guide](docs/getting-started/installation.md)
+- [Your First Feature](docs/getting-started/first-feature.md)
+- [Configuration Options](docs/getting-started/configuration.md)
+
+### Workflows
+- [Simple Features](docs/workflows/simple-features.md)
+- [Complex Features](docs/workflows/complex-features.md)
+- [Bug Fixes](docs/workflows/bug-fixes.md)
+- [Team Collaboration](docs/workflows/team-collaboration.md)
+
+### Advanced Guides
+- [TDD with APEX](docs/guides/tdd-with-apex.md)
+- [Git Integration](docs/guides/git-integration.md)
+- [PR Reviews](docs/guides/pr-reviews.md)
+- [Troubleshooting](docs/guides/troubleshooting.md)
+
+### Comparisons
+- [APEX vs Traditional](docs/comparison/apex-vs-traditional.md)
+- [Migration Guide](docs/comparison/migration-guide.md)
+- [Case Studies](docs/comparison/case-studies.md)
+
+## 🌟 Real-World Examples
+
+See APEX in action:
+
+- [Simple Todo App](examples/simple-todo-app/) - 30 minutes from idea to deployment
+- [Auth System](examples/auth-system/) - Secure authentication with all edge cases
+- [Payment Integration](examples/payment-integration/) - PCI-compliant Stripe integration
+- [SaaS Platform](examples/real-world-saas/) - Complete multi-tenant application
+
+## 🛠️ Core Templates
+
+### Claude Integration (`.claude/apex.md`)
+Contains the complete APEX rules and workflow definitions for Claude Projects.
+
+### Cursor Rules (`.cursorrules`)
+Optimized ruleset for Cursor IDE with APEX workflow integration.
+
+### GitHub Copilot Instructions
+Structured instructions for GitHub Copilot to follow APEX patterns.
+
+## 🤝 Community
+
+- **Discord**: [Join our community](https://discord.gg/apex-enhanced)
+- **Discussions**: [GitHub Discussions](https://github.com/EscoCodesETH/apex-enhanced/discussions)
+- **Twitter**: [@apexenhanced](https://twitter.com/apexenhanced)
+
+## 🚧 Roadmap
+
+- [ ] VS Code Extension (Q2 2025)
+- [ ] APEX CLI Tool (Q2 2025)
+- [ ] Team Analytics Dashboard (Q3 2025)
+- [ ] Custom AI Model Fine-tuning (Q4 2025)
+
+## 💡 Philosophy
+
+> "The best development workflow is the one you don't notice—where AI handles the complexity while you focus on creating value."
+
+APEX Enhanced believes in:
+- **AI as Partner, Not Replacement** - Augment human creativity
+- **Quality Without Bureaucracy** - Automation over process
+- **Continuous Improvement** - Learn from every line of code
+- **Pragmatic Adaptation** - Right tool for the right job
+
+## 🚀 Getting Started
+
+1. **Choose your AI tool** - Claude, Cursor, Copilot, or others
+2. **Install APEX templates** - Use our setup scripts
+3. **Start building** - Tell your AI to use APEX Enhanced
+4. **Adapt as needed** - Choose lightweight, standard, or robust mode
+
+## 📝 Basic Usage
+
+```bash
+# Start a new feature
+"Let's implement [feature] using APEX Enhanced"
+
+# Specify complexity
+"This is a simple/standard/critical feature"
+
+# Review code
+"Review this using APEX Sandi Metz principles"
+
+# Create commits
+"Create APEX-style commits for these changes"
+```
+
+## 🙏 Acknowledgments
+
+APEX Enhanced synthesizes the best ideas from:
+- The original AI Dev Tasks workflow by [original author]
+- Sabrina Ramonov's quality practices
+- Sandi Metz's design principles
+- The broader AI coding community
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) file
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](community/CONTRIBUTING.md) for details.
+
+---
+
+<div align="center">
+  <p>If APEX Enhanced helps your development, please ⭐ this repository!</p>
+  <p><a href="https://github.com/EscoCodesETH/apex-enhanced">Start Using APEX Enhanced →</a></p>
+</div>
