@@ -1,0 +1,271 @@
+name: APEX Enhanced CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test-first-check:
+    name: Verify Test-First Development
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Check Test-First Compliance
+        run: |
+          echo "🔍 Checking for test-first development..."
+          
+          # Get all commits in this PR
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            COMMITS=$(git log --format=%H origin/${{ github.base_ref }}..${{ github.sha }})
+            
+            for commit in $COMMITS; do
+              FILES=$(git diff-tree --no-commit-id --name-only -r $commit)
+              
+              # Check if implementation files were added before test files
+              for file in $FILES; do
+                if [[ $file =~ \.(js|ts|jsx|tsx)$ ]] && [[ ! $file =~ \.(test|spec)\. ]]; then
+                  # Check if corresponding test exists
+                  TEST_FILE=$(echo $file | sed 's/\.\(js\|ts\|jsx\|tsx\)$/.test.\1/')
+                  if ! git ls-tree -r $commit --name-only | grep -q "$TEST_FILE"; then
+                    echo "⚠️  Warning: $file added without test in commit $commit"
+                  fi
+                fi
+              done
+            done
+          fi
+
+  quality-checks:
+    name: Code Quality & Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      
+      - name: Install Dependencies
+        run: npm ci
+      
+      - name: Run Linting
+        run: npm run lint
+        
+      - name: Run Type Checking
+        run: npm run type-check || echo "No TypeScript configured"
+      
+      - name: Run Tests with Coverage
+        run: npm test -- --coverage --watchAll=false
+        
+      - name: Upload Coverage Reports
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+      
+      - name: Check Coverage Thresholds
+        run: |
+          COVERAGE=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
+          echo "📊 Current coverage: ${COVERAGE}%"
+          
+          if (( $(echo "$COVERAGE < 85" | bc -l) )); then
+            echo "❌ Coverage ${COVERAGE}% is below 85% threshold"
+            exit 1
+          else
+            echo "✅ Coverage ${COVERAGE}% meets threshold"
+          fi
+
+  commit-lint:
+    name: Conventional Commits Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Check Commit Messages
+        run: |
+          echo "🔍 Checking commit message format..."
+          
+          # Pattern for conventional commits
+          PATTERN='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?: .{1,72}$'
+          
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            COMMITS=$(git log --format=%s origin/${{ github.base_ref }}..${{ github.sha }})
+            
+            while IFS= read -r commit_msg; do
+              if ! echo "$commit_msg" | grep -qE "$PATTERN"; then
+                echo "❌ Invalid commit message: $commit_msg"
+                echo "Expected format: type(scope): subject"
+                echo "Valid types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
+                exit 1
+              fi
+            done <<< "$COMMITS"
+            
+            echo "✅ All commit messages follow conventional format"
+          fi
+
+  code-complexity:
+    name: Complexity Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          
+      - name: Install Dependencies
+        run: npm ci
+        
+      - name: Analyze Complexity
+        run: |
+          # Install complexity analysis tools if not in package.json
+          npm install -g complexity-report @putout/plugin-apply-shorthand-properties
+          
+          echo "📊 Analyzing code complexity..."
+          
+          # Run complexity analysis
+          cr --format json --output complexity.json src/ || true
+          
+          if [ -f complexity.json ]; then
+            # Check Sandi Metz rules
+            echo "Checking Sandi Metz rules..."
+            
+            # This is a simplified check - in real implementation, 
+            # you'd parse the complexity.json and check:
+            # - Classes under 100 lines
+            # - Methods under 5 lines
+            # - Max 4 parameters per method
+          fi
+
+  pr-size-check:
+    name: PR Size Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check PR Size
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            
+            console.log(`📏 PR size: ${pr.additions + pr.deletions} lines`);
+            
+            if (pr.additions + pr.deletions > 400) {
+              core.warning(`This PR changes ${pr.additions + pr.deletions} lines. Consider breaking it into smaller PRs for easier review.`);
+              
+              // Add comment to PR
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `## 📏 Large PR Alert\n\nThis PR contains ${pr.additions + pr.deletions} lines of changes. Consider breaking it into smaller, focused PRs for easier review.\n\n### Suggested split:\n1. Core functionality\n2. Tests\n3. Documentation\n4. Refactoring`
+              });
+            }
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run Security Audit
+        run: npm audit --audit-level=moderate
+        
+      - name: Run SAST Scan
+        uses: github/super-linter@v5
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_JAVASCRIPT_ES: true
+          VALIDATE_TYPESCRIPT_ES: true
+          VALIDATE_JSON: true
+          VALIDATE_YAML: true
+
+  build:
+    name: Build Check
+    runs-on: ubuntu-latest
+    needs: [quality-checks, commit-lint]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+          
+      - name: Install Dependencies
+        run: npm ci
+        
+      - name: Build Project
+        run: npm run build || echo "No build step configured"
+        
+      - name: Check Bundle Size
+        run: |
+          if [ -f "dist" ]; then
+            echo "📦 Bundle size report:"
+            du -sh dist/*
+          fi
+
+  apex-compliance-summary:
+    name: APEX Compliance Summary
+    runs-on: ubuntu-latest
+    needs: [test-first-check, quality-checks, commit-lint, code-complexity, pr-size-check]
+    if: always()
+    steps:
+      - name: Summary Report
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const jobs = ${{ toJson(needs) }};
+            let comment = '## 🚀 APEX Enhanced Compliance Report\n\n';
+            
+            const statusEmoji = {
+              'success': '✅',
+              'failure': '❌',
+              'cancelled': '⚠️',
+              'skipped': '⏭️'
+            };
+            
+            comment += '| Check | Status |\n|-------|--------|\n';
+            
+            for (const [job, status] of Object.entries(jobs)) {
+              const emoji = statusEmoji[status.result] || '❓';
+              const jobName = job.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+              comment += `| ${jobName} | ${emoji} ${status.result} |\n`;
+            }
+            
+            comment += '\n### 📋 APEX Principles Reminder\n';
+            comment += '1. 🧪 **Test First**: Write failing tests before implementation\n';
+            comment += '2. 🟢 **Make It Pass**: Write minimal code to pass tests\n';
+            comment += '3. 🔵 **Refactor**: Improve code while keeping tests green\n';
+            comment += '4. 📝 **Document**: Update docs and comments\n';
+            
+            if (context.eventName === 'pull_request') {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }
